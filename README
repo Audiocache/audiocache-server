@@ -1,0 +1,5 @@
+The Audiocache Golang server software
+
+1. go get github.com/Audiocache/audiocache-server
+2. go build
+3. ./audiocache
