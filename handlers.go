@@ -34,6 +34,11 @@ func CacheIndex(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func MarshalCache(apicache APICache) (string, error) {
+	str, err := json.Marshal(apicache)
+	return string(str), err
+}
+
 func CacheShow(w http.ResponseWriter, r *http.Request) {
 	cacheId, err := strconv.ParseUint(mux.Vars(r)["cacheId"], 10, 64)
 	if err != nil {
@@ -48,9 +53,12 @@ func CacheShow(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 
-	if err := json.NewEncoder(w).Encode(DBToAPI(cache)); err != nil {
+	str, err := MarshalCache(DBToAPI(cache))
+	if err != nil {
 		panic(err)
 	}
+
+	fmt.Fprintln(w, str)
 }
 
 func CacheCreate(w http.ResponseWriter, r *http.Request) {
@@ -72,9 +80,9 @@ func CacheCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filename := uuid.New() + ".mp3"
-	dbcache := PostToDB(postcache, filename)
+	incache := PostToDB(postcache, filename)
 
-	err = postCache(dbcache)
+	outcache, err := postCache(incache)
 	if err != nil {
 		panic(err)
 	}
@@ -87,5 +95,10 @@ func CacheCreate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated)
 
-	fmt.Fprintln(w, "OK")
+	str, err := MarshalCache(DBToAPI(outcache))
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Fprintln(w, str)
 }

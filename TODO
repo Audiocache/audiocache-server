@@ -1,4 +1,3 @@
 * Remove things that should be configy to a config file (FileRoot, db params, server port/addr, ...)
 * Remove mp3 assumption
-* Replace the NamedExec in postCache with a Select, using INSERT ... RETURNING *, then return the APICache to the user
 * Betterness the Path <-> URI functions

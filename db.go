@@ -39,17 +39,25 @@ func getCache(id uint64) (DBCache, error) {
 	return cache, err
 }
 
-func postCache(dbcache DBCache) error {
+func postCache(incache DBCache) (DBCache, error) {
+	var outcache DBCache
+
 	db, err := sqlx.Connect("postgres", "user=audiocache password=audiocache dbname=audiocache sslmode=disable")
 	if err != nil {
-		return err
+		return outcache, err
 	}
 
-	_, err = db.NamedExec("INSERT INTO caches (latitude, longitude, created, path) VALUES (:latitude, :longitude, :created, :path)", dbcache)
+	rows, err := db.NamedQuery("INSERT INTO caches (latitude, longitude, created, path) VALUES (:latitude, :longitude, :created, :path) RETURNING *", incache)
 	if err != nil {
-		return err
+		return outcache, err
+	}
+
+	rows.Next()
+	err = rows.StructScan(&outcache)
+	if err != nil {
+		return outcache, err
 	}
 
 	err = db.Close()
-	return err
+	return outcache, err
 }

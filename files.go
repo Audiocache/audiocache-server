@@ -9,8 +9,8 @@ func writeFile(postcache PostCache, filename string) error {
 	data := postcache.Data
 	var binary []byte
 
-	n, err := base64.StdEncoding.Decode(binary, []byte(data))
-	if n == 0 || err != nil {
+	binary, err := base64.StdEncoding.DecodeString(data)
+	if err != nil {
 		return err
 	}
 
