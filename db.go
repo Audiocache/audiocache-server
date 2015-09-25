@@ -5,10 +5,21 @@ import (
 	_ "github.com/lib/pq"
 )
 
+func connect() (*sqlx.DB, error) {
+	db := config.Database
+
+	return sqlx.Connect(
+		db.Adapter,
+		"user="+db.Username+
+			" password="+db.Password+
+			" dbname="+db.Database+
+			" sslmode="+db.SSLMode)
+}
+
 func getCaches() (DBCaches, error) {
 	var caches DBCaches
 
-	db, err := sqlx.Connect("postgres", "user=audiocache password=audiocache dbname=audiocache sslmode=disable")
+	db, err := connect()
 	if err != nil {
 		return caches, err
 	}
@@ -25,7 +36,7 @@ func getCaches() (DBCaches, error) {
 func getCache(id uint64) (DBCache, error) {
 	var cache DBCache
 
-	db, err := sqlx.Connect("postgres", "user=audiocache password=audiocache dbname=audiocache sslmode=disable")
+	db, err := connect()
 	if err != nil {
 		return cache, err
 	}
@@ -42,7 +53,7 @@ func getCache(id uint64) (DBCache, error) {
 func postCache(incache DBCache) (DBCache, error) {
 	var outcache DBCache
 
-	db, err := sqlx.Connect("postgres", "user=audiocache password=audiocache dbname=audiocache sslmode=disable")
+	db, err := connect()
 	if err != nil {
 		return outcache, err
 	}

@@ -12,6 +12,9 @@ import (
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+
 	fmt.Fprintln(w, "Welcome!")
 }
 

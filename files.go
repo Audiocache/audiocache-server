@@ -14,7 +14,7 @@ func writeFile(postcache PostCache, filename string) error {
 		return err
 	}
 
-	err = ioutil.WriteFile("files/"+filename, binary, 0644)
+	err = ioutil.WriteFile(config.API.Files+filename, binary, 0644)
 	if err != nil {
 		return err
 	}

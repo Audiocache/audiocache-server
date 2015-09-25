@@ -4,8 +4,6 @@ import (
 	"time"
 )
 
-var FileRoot string = "http://localhost:8080/files/"
-
 type APICache struct {
 	Id        uint64    `json:"id"`
 	Latitude  float64   `json:"latitude"`
@@ -33,7 +31,7 @@ type PostCache struct {
 }
 
 func PathToURI(path string) string {
-	return FileRoot + path
+	return config.API.Location + config.API.Files + path
 }
 
 func DBToAPI(db DBCache) APICache {
