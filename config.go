@@ -1,5 +1,10 @@
 package main
 
+import (
+	"encoding/json"
+	"io/ioutil"
+)
+
 type Config struct {
 	Database Database
 	Storage  Storage
@@ -30,24 +35,14 @@ type API struct {
 	Files    string
 }
 
-var config = Config{
-	Database{
-		Username: "audiocache",
-		Password: "audiocache",
-		Hostname: "localhost",
-		Database: "audiocache",
-		Adapter:  "postgres",
-		SSLMode:  "disable",
-	},
-	Storage{
-		Location: "/tmp/audiocache/",
-	},
-	Server{
-		Listen: "127.0.0.1",
-		Port:   "8080",
-	},
-	API{
-		Location: "http://localhost:8080/",
-		Files:    "files/",
-	},
+func LoadFile(filename string) (Config, error) {
+	var config Config
+
+	file, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return config, err
+	}
+
+	err = json.Unmarshal(file, &config)
+	return config, err
 }

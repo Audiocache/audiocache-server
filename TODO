@@ -1,3 +1,2 @@
 * Remove mp3 assumption
-* Separate config var from config defs, and routes var from routes defs
-* Should config and routes be broken out into json files to be read into variables at startup? Yes, probably.
+* Routes for files

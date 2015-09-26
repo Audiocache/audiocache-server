@@ -32,13 +32,16 @@ func CacheIndex(w http.ResponseWriter, r *http.Request) {
 		apicaches = append(apicaches, DBToAPI(dbcaches[db]))
 	}
 
-	if err := json.NewEncoder(w).Encode(apicaches); err != nil {
+	out, err := json.MarshalIndent(apicaches, "", "  ")
+	if err != nil {
 		panic(err)
 	}
+
+	fmt.Fprintf(w, string(out))
 }
 
 func MarshalCache(apicache APICache) (string, error) {
-	str, err := json.Marshal(apicache)
+	str, err := json.MarshalIndent(apicache, "", "  ")
 	return string(str), err
 }
 
@@ -77,9 +80,7 @@ func CacheCreate(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(body, &postcache); err != nil {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(422) // unprocessable entity
-		if err := json.NewEncoder(w).Encode(err); err != nil {
-			panic(err)
-		}
+		panic(err)
 	}
 
 	filename := uuid.New() + ".mp3"
